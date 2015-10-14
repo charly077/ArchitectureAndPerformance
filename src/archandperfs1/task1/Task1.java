@@ -8,7 +8,7 @@ import archandperfs1.Request;
 
 public class Task1 {
 	public static void main(String[] args) throws IOException {
-		BytehitrateWarmingCache c = new LFUCache(100, 0);
+		BytehitrateWarmingCache c = new LRUCache(100, 0);
 		
 		Scanner in = new Scanner(System.in);
 		while(in.hasNext()) {

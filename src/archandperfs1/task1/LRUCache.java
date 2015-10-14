@@ -2,72 +2,96 @@ package archandperfs1.task1;
 
 import java.util.HashMap;
 
+import archandperfs1.BytehitrateWarmingCache;
 import archandperfs1.Request;
 import archandperfs1.Resource;
-import archandperfs1.BytehitrateWarmingCache;
 
 /**
  * A LRU cache implemented with an array of resources, and a hashmap in order to retrieve
  * the position in the array.
  */
 public class LRUCache extends BytehitrateWarmingCache {
-	private final HashMap<String, Integer> mapping = new HashMap<>(); 
-	private final Resource[] content;
-	private final boolean[] recentlyUsed;
+	private final HashMap<String, Node> mapping = new HashMap<>(); 
 	private final int n;
 	
-	private int cursor = 0, elems = 0;
+	private Node head, last;
 	
 	public LRUCache(int n, int x) {
 		super(x);
 		this.n = n;
-		this.content = new Resource[n];
-		this.recentlyUsed = new boolean[n];
 	}
 	
 	@Override
 	public Resource process(Request req) {
-		Integer i = mapping.get(req.url);
-		if(i != null) {
+		Node node = mapping.get(req.url);
+		if(node != null) {
 //			Already in the HashMap
-			Resource res = content[i];
+			Resource res = node.res;
 			if(req.size == res.size) {
-//				Same size => hit and return
-				recentlyUsed[i] = true;
+//				Same size => hit, toHead and return
 				hit(req);
+				removeNode(node);
+				toHead(node);
 				return res;
 			}
 			else {
-//				Not the same size => miss, replace and return
+//				Not the same size => miss, toHead and return
 				res = miss(req);
-				recentlyUsed[i] = false;
-				content[i] = res;
+				node.res = res;
+				removeNode(node);
+				toHead(node);
 				return res;
 			}
 		}
-		
 //		Not in the HashMap. Full or not?
-		if(elems == n) {
-//			Full => remove the next unused element
-			while(recentlyUsed[cursor] == true) {
-				recentlyUsed[cursor] = false;
-				cursor = (cursor+1)%n;
-			}
-			Resource toRemove = content[cursor];
-			mapping.remove(toRemove.url);
-			elems--;
+		if(mapping.size() >= n) {
+//			Full => remove the last element
+			mapping.remove(last.res.url);
+			removeNode(last);
 		}
 		
-//		Let's put the resource at position cursor
+//		Let's create a Node and put it at the beginning
 		Resource res = miss(req);
-		content[cursor] = res;
-		mapping.put(res.url, cursor);
-		recentlyUsed[cursor] = false;
-		
-		elems++;
-		cursor = (cursor+1)%n;
-		
+		node = new Node(res);
+		toHead(node);
+		mapping.put(req.url, node);
 		return res;
+	}
+	
+	public void removeNode(Node n) {
+		Node before = n.prev, after = n.next;
+		n.prev = n.next = null;
+		
+//		Has a prev. No? then was first
+		if(before == null)
+			head = after;
+		else
+			before.next = after;
+		
+//		Has a next. No? then was last
+		if(after == null)
+			last = before;
+		else
+			after.prev = before;
+	}
+	
+	public void toHead(Node n) {
+		n.prev = null;
+		n.next = head;
+//		One element only
+		if(head == null)
+			last = n;
+		else
+			head.prev = n;
+		head = n;
+	}
+	
+	public static class Node {
+		private Resource res;
+		private Node prev, next;
+		public Node(Resource res) {
+			this.res = res;
+		}
 	}
 
 }
