@@ -3,11 +3,12 @@ package archandperfs1.task1;
 import java.io.IOException;
 import java.util.Scanner;
 
+import archandperfs1.BytehitrateWarmingCache;
 import archandperfs1.Request;
 
 public class Task1 {
 	public static void main(String[] args) throws IOException {
-		LRUCache c = new LRUCache(1000, 0);
+		BytehitrateWarmingCache c = new LFUCache(100, 0);
 		
 		Scanner in = new Scanner(System.in);
 		while(in.hasNext()) {

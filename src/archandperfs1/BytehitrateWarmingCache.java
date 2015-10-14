@@ -4,13 +4,13 @@ package archandperfs1;
  * Another Cache base class, relying on AbstractCache, but this time, taking a warmup parameter,
  * and computing the byte hit rate as well.
  */
-public abstract class ByterateWarmingCache extends AbstractCache {
+public abstract class BytehitrateWarmingCache extends AbstractCache {
 	private final int x;
 	private int requests = 0;
 	private long bytehit = 0;
 	private long bytemiss = 0;
 	
-	public ByterateWarmingCache(int x) {
+	public BytehitrateWarmingCache(int x) {
 		this.x = x;
 	}
 	

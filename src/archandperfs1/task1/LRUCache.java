@@ -4,13 +4,13 @@ import java.util.HashMap;
 
 import archandperfs1.Request;
 import archandperfs1.Resource;
-import archandperfs1.ByterateWarmingCache;
+import archandperfs1.BytehitrateWarmingCache;
 
 /**
  * A LRU cache implemented with an array of resources, and a hashmap in order to retrieve
  * the position in the array.
  */
-public class LRUCache extends ByterateWarmingCache {
+public class LRUCache extends BytehitrateWarmingCache {
 	private final HashMap<String, Integer> mapping = new HashMap<>(); 
 	private final Resource[] content;
 	private final boolean[] recentlyUsed;
@@ -28,25 +28,37 @@ public class LRUCache extends ByterateWarmingCache {
 	@Override
 	public Resource process(Request req) {
 		Integer i = mapping.get(req.url);
-//		Already in the HashMap
 		if(i != null) {
-			recentlyUsed[i] = true;
-			hit(req);
-			return content[i];
+//			Already in the HashMap
+			Resource res = content[i];
+			if(req.size == res.size) {
+//				Same size => hit and return
+				recentlyUsed[i] = true;
+				hit(req);
+				return res;
+			}
+			else {
+//				Not the same size => miss, replace and return
+				res = miss(req);
+				recentlyUsed[i] = false;
+				content[i] = res;
+				return res;
+			}
 		}
 		
-//		Not in the HashMap or not the same size. Full or not?
+//		Not in the HashMap. Full or not?
 		if(elems == n) {
+//			Full => remove the next unused element
 			while(recentlyUsed[cursor] == true) {
 				recentlyUsed[cursor] = false;
 				cursor = (cursor+1)%n;
 			}
-			
 			Resource toRemove = content[cursor];
 			mapping.remove(toRemove.url);
 			elems--;
 		}
 		
+//		Let's put the resource at position cursor
 		Resource res = miss(req);
 		content[cursor] = res;
 		mapping.put(res.url, cursor);
