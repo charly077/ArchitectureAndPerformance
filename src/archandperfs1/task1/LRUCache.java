@@ -94,4 +94,15 @@ public class LRUCache extends BytehitrateWarmingCache {
 		}
 	}
 
+	@Override
+	public String dump() {
+		Node n = head;
+		StringBuilder b = new StringBuilder();
+		while(n != null) {
+			b.append(n.res.url).append('\n');
+			n = n.next;
+		}
+		return b.toString();
+	}
+
 }

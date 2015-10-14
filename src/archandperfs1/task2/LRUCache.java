@@ -19,4 +19,10 @@ public class LRUCache extends BytehitrateWarmingCache {
 		return null;
 	}
 
+	@Override
+	public String dump() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -70,4 +70,10 @@ public class LRUClockCache extends BytehitrateWarmingCache {
 		return res;
 	}
 
+	@Override
+	public String dump() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

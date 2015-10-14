@@ -79,4 +79,14 @@ public class LFUCache extends BytehitrateWarmingCache {
 		return iless;
 	}
 
+	@Override
+	public String dump() {
+		StringBuilder b = new StringBuilder();
+		for(int i = 0; i < content.length; i++) {
+			if(content[i] != null)
+				b.append(content[i].url).append('\n');
+		}
+		return b.toString();
+	}
+
 }
