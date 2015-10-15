@@ -66,7 +66,6 @@ public class LRUCache extends BytehitrateWarmingCache {
 // 		previous modification
 		if(previous == null){
 			head = after;
-			head.pre = null;
 		}	
 		else
 			previous.next = after;
@@ -74,7 +73,6 @@ public class LRUCache extends BytehitrateWarmingCache {
 // 		next modification
 		if(after == null){
 			tail = previous;
-			previous.next = null;
 		}
 		else
 			after.pre = previous;
