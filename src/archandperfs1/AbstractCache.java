@@ -31,4 +31,6 @@ public abstract class AbstractCache {
 		return new Resource(req.url, req.size);
 	}
 	
+	public abstract String dump();
+	
 }
