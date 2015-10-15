@@ -51,7 +51,7 @@ public class LRUCache extends BytehitrateWarmingCache {
 			removeNode(tail);
 		}
 		
-		// Create an element 
+//		Create an element 
 		Resource res = miss(req);
 		node = new Node(res);
 		toHead(node);
@@ -76,8 +76,8 @@ public class LRUCache extends BytehitrateWarmingCache {
 		}
 		else
 			after.pre = previous;
-		
-		size -= n.res.size; // In order to keep the size correct
+//		add the size to the one of what is already full 
+		size -= n.res.size; 
 	}
 	
 
@@ -92,7 +92,8 @@ public class LRUCache extends BytehitrateWarmingCache {
 			head.pre = n;
 		
 		head = n;
-		size += n.res.size; // In order to keep the size correct
+//		In order to keep the size correct
+		size += n.res.size;
 	}
 	
 	
@@ -106,8 +107,14 @@ public class LRUCache extends BytehitrateWarmingCache {
 
 	@Override
 	public String dump() {
-		// TODO Auto-generated method stub
-		return null;
+		Node n = head;
+		
+		StringBuilder b = new StringBuilder();
+		while (n!=null){
+			b.append(n.res.url).append('\n');
+			n=n.next;
+		}
+		return b.toString();
 	}
 
 }
