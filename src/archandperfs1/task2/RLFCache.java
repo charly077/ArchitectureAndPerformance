@@ -26,29 +26,33 @@ public class RLFCache extends BytehitrateWarmingCache{
 
 	@Override
 	public Resource process(Request req) {
+//		System.out.println("taille de la req = "+ req.size + "\ncache: "+size+"/"+sizeMax);
 		ResNode resNode = mapping.get(req.url);
 		if(resNode != null){
 //			Already in the hash
 			Resource res = resNode.res;
 			if(res.size == req.size){
+//				Nothing to do
 				hit(req);
-				pqueue.remove(resNode);
-				resNode.addCount(); // add 1 to the frequency count
-				pqueue.add(resNode);
 				return res;
 			}
 			else{
 //				size is different
+				size -= res.size;
 				res = miss(req);
-				size = size - resNode.res.size + res.size;
+				size += res.size;
 				pqueue.remove(resNode);
-				resNode.count = 0; // reset the count
 				resNode.res = res; // modify the content
 				pqueue.add(resNode);
 				return res;
 			}
 		}
-//		Not in the hashMap
+//		Not in the hashMap and too big for the cache
+		if (req.size >= sizeMax){
+			Resource res = miss(req);
+			return res;
+		}
+//		Not in the hashMap but space available
 		while( (size+req.size >= sizeMax)){
 			resNode = pqueue.poll();
 			mapping.remove(resNode.res.url);
@@ -65,16 +69,12 @@ public class RLFCache extends BytehitrateWarmingCache{
 	
 //	PriorityQueue : Resource with comparator
 	public static class ResNode implements Comparable<ResNode>{
-		private int count = 0; // used by the priority queue!
 		private Resource res;
 		
 		public ResNode(Resource res){
 			this.res = res;
 		}
 		
-		public void addCount(){
-			count ++;
-		}
 		
 		@Override 
 		public boolean equals(Object other) {

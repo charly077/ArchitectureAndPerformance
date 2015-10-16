@@ -38,15 +38,26 @@ public class LRUCache extends BytehitrateWarmingCache {
 				return res;
 			}
 //			Not the same size => miss, toHead and return
+			size -= res.size;
 			res = miss(req);
+			size += res.size;
 			node.res = res;
 			removeNode(node);
 			toHead(node);
 			return res;
 		}
-//		Enough space for stocking the ressource
+//		Not in the hashMap and too big for the cache
+		if (req.size >= sizeMax){
+			Resource res = miss(req);
+			return res;
+		}
+//		Not in the hashMap but space available
+		
 		while((size+req.size) >= sizeMax){
 			// remove the last one
+//			System.out.println("la taille est de " + size + "/"+sizeMax +" pour \n"+ req.url + " "+ req.size );
+//			System.out.println(mapping.values());
+//			System.out.println(tail);
 			mapping.remove(tail.res.url);
 			removeNode(tail);
 		}
@@ -87,7 +98,7 @@ public class LRUCache extends BytehitrateWarmingCache {
 		
 // 		Empty List
 		if (head == null)
-			tail = head;
+			tail = head = n;
 		else
 			head.pre = n;
 		

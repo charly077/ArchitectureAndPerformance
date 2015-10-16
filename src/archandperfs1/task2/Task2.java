@@ -1,13 +1,12 @@
 package archandperfs1.task2;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
 import archandperfs1.BytehitrateWarmingCache;
 import archandperfs1.Request;
-import archandperfs1.task1.LFUCache;
-import archandperfs1.task1.LRUCache;
 
 public class Task2 {
 	public static void main(String[] args) throws IOException {
@@ -17,6 +16,8 @@ public class Task2 {
 		BytehitrateWarmingCache lfu = new LFUCache(size, x);
 		BytehitrateWarmingCache rlf = new RLFCache(size, x);
 		
+//		try (FileReader fr = new FileReader ("trace.txt")){
+		
 		Scanner in = new Scanner(System.in);
 		while(in.hasNext()) {
 			Request res = new Request(in.next(), in.nextInt());
@@ -24,11 +25,17 @@ public class Task2 {
 			lfu.process(res);
 			rlf.process(res);
 		}
-		
+		in.close();
+//		}
 
 		System.out.println(String.format("LRU Hit rate: %.1f", lru.hitRate()*100));
+		System.out.println(String.format("LRU Byte rate: %.1f", lru.byteHitRate()*100));
+		
 		System.out.println(String.format("LFU Hit rate: %.1f", lfu.hitRate()*100));
+		System.out.println(String.format("LRU Byte rate: %.1f", lfu.byteHitRate()*100));
+		
 		System.out.println(String.format("RLF Hit rate: %.1f", rlf.hitRate()*100));
+		System.out.println(String.format("LRU Byte rate: %.1f", rlf.byteHitRate()*100));
 		
 		PrintWriter pr = new PrintWriter("cache_lfu.txt");
 		pr.write(lfu.dump());

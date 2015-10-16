@@ -53,6 +53,7 @@ public class LFUCache extends BytehitrateWarmingCache{
 
 	@Override
 	public Resource process(Request req) {
+//		System.out.println("taille de la req = "+ req.size + "\ncache: "+size+"/"+sizeMax);
 		ResNode resNode = mapping.get(req.url);
 		if(resNode != null){
 //			Already in the hash
@@ -66,8 +67,9 @@ public class LFUCache extends BytehitrateWarmingCache{
 			}
 			else{
 //				size is different
+				size -= res.size;
 				res = miss(req);
-				size = size - resNode.res.size + res.size;
+				size += res.size;
 				pqueue.remove(resNode);
 				resNode.count = 0; // reset the count
 				resNode.res = res; // modify the content
@@ -75,7 +77,12 @@ public class LFUCache extends BytehitrateWarmingCache{
 				return res;
 			}
 		}
-//		Not in the hashMap
+//		Not in the hashMap and too big for the cache
+		if (req.size >= sizeMax){
+			Resource res = miss(req);
+			return res;
+		}
+//		Not in the hashMap but space available
 		while( (size+req.size >= sizeMax)){
 			resNode = pqueue.poll();
 			mapping.remove(resNode.res.url);
