@@ -28,14 +28,14 @@ public class Task2 {
 		in.close();
 //		}
 
-		System.out.println(String.format("LRU Hit rate: %.1f", lru.hitRate()*100));
-		System.out.println(String.format("LRU Byte rate: %.1f", lru.byteHitRate()*100));
+		System.out.println(String.format("LRU hitrate: %.1f", lru.hitRate()*100));
+		System.out.println(String.format("LRU Byte hitrate: %.1f", lru.byteHitRate()*100));
 		
-		System.out.println(String.format("LFU Hit rate: %.1f", lfu.hitRate()*100));
-		System.out.println(String.format("LRU Byte rate: %.1f", lfu.byteHitRate()*100));
+		System.out.println(String.format("LFU hitrate: %.1f", lfu.hitRate()*100));
+		System.out.println(String.format("LRU Byte hitrate: %.1f", lfu.byteHitRate()*100));
 		
-		System.out.println(String.format("RLF Hit rate: %.1f", rlf.hitRate()*100));
-		System.out.println(String.format("LRU Byte rate: %.1f", rlf.byteHitRate()*100));
+		System.out.println(String.format("RLF hitrate: %.1f", rlf.hitRate()*100));
+		System.out.println(String.format("RLF Byte hitrate: %.1f", rlf.byteHitRate()*100));
 		
 		PrintWriter pr = new PrintWriter("cache_lfu.txt");
 		pr.write(lfu.dump());

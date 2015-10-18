@@ -7,6 +7,7 @@ import java.util.PriorityQueue;
 import archandperfs1.BytehitrateWarmingCache;
 import archandperfs1.Request;
 import archandperfs1.Resource;
+import archandperfs1.task1.LFUCache.ResNode;
 
 //TODO Test if when we modify a node, it modify the priorityQueue
 
@@ -14,8 +15,7 @@ public class LFUCache extends BytehitrateWarmingCache{
 	private HashMap<String, ResNode> mapping = new HashMap<>(); // to be able of modifying a node
 	private  PriorityQueue<ResNode> pqueue = new PriorityQueue<ResNode>();
 	
-	int x,sizeMax,size = 0;
-	
+	private int sizeMax, size = 0;
 	
 	public LFUCache(int sizeMax, int x) {
 		super(x);
@@ -33,6 +33,7 @@ public class LFUCache extends BytehitrateWarmingCache{
 				hit(req);
 				pqueue.remove(resNode);
 				resNode.addCount(); // add 1 to the frequency count
+				resNode.stamp();
 				pqueue.add(resNode);
 				return res;
 			}
@@ -44,6 +45,7 @@ public class LFUCache extends BytehitrateWarmingCache{
 				pqueue.remove(resNode);
 				resNode.count = 0; // reset the count
 				resNode.res = res; // modify the content
+				resNode.stamp();
 				pqueue.add(resNode);
 				return res;
 			}
@@ -62,43 +64,47 @@ public class LFUCache extends BytehitrateWarmingCache{
 		Resource res = miss(req);
 		resNode = new ResNode(res);
 		mapping.put(resNode.res.url, resNode);
+		resNode.stamp();
 		pqueue.add(resNode);
 		size += res.size;
 		return res;
 	}
 
-	
-//	PriorityQueue : Resource with comparator
 	public static class ResNode implements Comparable<ResNode>{
 		private int count = 0; // used by the priority queue!
+		private long timestamp;
 		private Resource res;
 		
 		public ResNode(Resource res){
 			this.res = res;
+			this.timestamp = System.nanoTime();
 		}
 		
 		public void addCount(){
-			count ++;
+			count++;
+		}
+		
+		public void stamp() {
+			this.timestamp = System.nanoTime();
 		}
 		
 		@Override 
 		public boolean equals(Object other) {
-		    boolean result = false;
 		    if (other instanceof ResNode) {
 		        ResNode that = (ResNode) other;
-		        result = that.res.url == this.res.url;
+		        return this.res.url.equals(that.res.url);
 		    }
-		    return result;
+		    return false;
 		}
 		
 //		poll -> remove the least frequency element
 		@Override
 		public int compareTo(ResNode other) {
 		    final int BEFORE = -1;
-		    final int EQUAL = 0;
 		    final int AFTER = 1;
-		    if (this.count == other.count) 
-		    	return EQUAL;
+		    if (this.count == other.count)
+//		    	The most recent goes further
+		    	return (int) (this.timestamp - other.timestamp); 
 		    else if (this.count < other.count)
 		    	return BEFORE;
 		    else

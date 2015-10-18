@@ -1,90 +1,115 @@
 package archandperfs1.task1;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.PriorityQueue;
 
 import archandperfs1.BytehitrateWarmingCache;
 import archandperfs1.Request;
 import archandperfs1.Resource;
 
 public class LFUCache extends BytehitrateWarmingCache {
-	
-	private HashMap<String, Integer> mapping = new HashMap<>();
-	private final Resource[] content;
-	private final int[] counts;
+	private HashMap<String, ResNode> mapping = new HashMap<>();
+	private final PriorityQueue<ResNode> pqueue = new PriorityQueue<>();
 	private final int n;
-	
-	private int elems = 0;
 	
 	public LFUCache(int n, int x) {
 		super(x);
 		this.n = n;
-		this.content = new Resource[n];
-		this.counts = new int[n];
-		Arrays.fill(counts,  0);
 	}
 
 	@Override
 	public Resource process(Request req) {
-		Integer i = mapping.get(req.url);
-		if(i != null) {
+		ResNode rnode = mapping.get(req.url);
+		if(rnode != null) {
 //			Already in the HashMap
-			Resource res = content[i];
+			Resource res = rnode.res;
 			if(req.size == res.size) {
 //				Same size => hit and return
 				hit(req);
-				counts[i]++;
+				pqueue.remove(rnode);
+				rnode.addCount();
+				rnode.stamp();
+				pqueue.add(rnode);
 				return res;
 			}
 			else {
 //				Not the same size => miss, replace and return
 				res = miss(req);
-				content[i] = res;
-				counts[i] = 0;
+				pqueue.remove(rnode);
+				rnode.res = res;
+				rnode.count = 0;
+				rnode.stamp();
+				pqueue.add(rnode);
 				return res;
 			}
 		}
 		
 //		Add an element
-		int cursor = elems;
-		if(elems == n) {
+		if(pqueue.size() == n) {
 //			Full => find the less used and remove it
-			int lessUsed = lessUsed();
-			Resource toRemove = content[lessUsed];
-			mapping.remove(toRemove.url);
-			content[lessUsed] = null;
-			counts[lessUsed] = 0;
-			cursor = lessUsed;
-			elems--;
+			ResNode removed = pqueue.poll();
+			mapping.remove(removed.res.url);
 		}
 		
 		Resource res = miss(req);
-		mapping.put(res.url, cursor);
-		content[cursor] = res;
+		rnode = new ResNode(res);
+		mapping.put(req.url, rnode);
+		rnode.stamp();
+		pqueue.add(rnode);
 		
-		elems++;
 		return res;
 	}
+
 	
-	private int lessUsed() {
-		int iless = 0, lesscount = Integer.MAX_VALUE;
+	public static class ResNode implements Comparable<ResNode>{
+		private int count = 0; // used by the priority queue!
+		private long timestamp;
+		private Resource res;
 		
-		for(int i = 0; i < elems; i++) {
-			if(counts[i] < lesscount) {
-				iless = i;
-				lesscount = counts[i];
-			}
+		public ResNode(Resource res){
+			this.res = res;
+			this.timestamp = System.nanoTime();
 		}
 		
-		return iless;
+		public void addCount(){
+			count++;
+		}
+		
+		public void stamp() {
+			this.timestamp = System.nanoTime();
+		}
+		
+		@Override 
+		public boolean equals(Object other) {
+		    if (other instanceof ResNode) {
+		        ResNode that = (ResNode) other;
+		        return this.res.url.equals(that.res.url);
+		    }
+		    return false;
+		}
+		
+//		poll -> remove the least frequency element
+		@Override
+		public int compareTo(ResNode other) {
+		    final int BEFORE = -1;
+		    final int AFTER = 1;
+		    if (this.count == other.count)
+//		    	The most recent goes further
+		    	return (int) (this.timestamp - other.timestamp); 
+		    else if (this.count < other.count)
+		    	return BEFORE;
+		    else
+		    	return AFTER;
+		}
 	}
 
 	@Override
 	public String dump() {
+		Iterator<ResNode> iter = pqueue.iterator();
 		StringBuilder b = new StringBuilder();
-		for(int i = 0; i < content.length; i++) {
-			if(content[i] != null)
-				b.append(content[i].url).append('\n');
+		while(iter.hasNext()) {
+			b.append(iter.next().res.toString()).append('\n');
 		}
 		return b.toString();
 	}
