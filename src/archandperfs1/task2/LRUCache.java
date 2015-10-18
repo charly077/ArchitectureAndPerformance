@@ -55,9 +55,6 @@ public class LRUCache extends BytehitrateWarmingCache {
 		
 		while((size+req.size) >= sizeMax){
 			// remove the last one
-//			System.out.println("la taille est de " + size + "/"+sizeMax +" pour \n"+ req.url + " "+ req.size );
-//			System.out.println(mapping.values());
-//			System.out.println(tail);
 			mapping.remove(tail.res.url);
 			removeNode(tail);
 		}

@@ -1,6 +1,5 @@
 package archandperfs1.task2;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
@@ -11,7 +10,7 @@ import archandperfs1.Request;
 public class Task2 {
 	public static void main(String[] args) throws IOException {
 		int size = Integer.parseInt(args[1]), x = Integer.parseInt(args[0]);
-		
+
 		BytehitrateWarmingCache lru = new LRUCache(size, x);
 		BytehitrateWarmingCache lfu = new LFUCache(size, x);
 		BytehitrateWarmingCache rlf = new RLFCache(size, x);
@@ -20,6 +19,7 @@ public class Task2 {
 		
 		Scanner in = new Scanner(System.in);
 		while(in.hasNext()) {
+
 			Request res = new Request(in.next(), in.nextInt());
 			lru.process(res);
 			lfu.process(res);

@@ -26,7 +26,6 @@ public class RLFCache extends BytehitrateWarmingCache{
 
 	@Override
 	public Resource process(Request req) {
-//		System.out.println("taille de la req = "+ req.size + "\ncache: "+size+"/"+sizeMax);
 		ResNode resNode = mapping.get(req.url);
 		if(resNode != null){
 //			Already in the hash

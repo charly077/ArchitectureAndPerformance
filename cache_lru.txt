@@ -1,0 +1,3 @@
+/images/kscmap-small.gif
+/icons/unknown.xbm
+/shuttle/missions/sts-71/movies/sts-71-launch-3.mpg

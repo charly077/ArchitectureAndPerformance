@@ -16,35 +16,6 @@ public class LFUCache extends BytehitrateWarmingCache{
 	
 	int x,sizeMax,size = 0;
 	
-	/**
-	 * to delete it was a test to be sure that the PriorityQueue was working correctly!!!
-	 */
-//	public static void main(String[] args) {
-//		Resource res3 = new Resource("Bonjour,je suis la resource 3 ",5);
-//		Resource res1 = new Resource("Bonjour, je suis la resource 1 ",1000);
-//		Resource res2 = new Resource("Bonjour, je suis la resource 2 ", 10);
-//		LFUCache lfu = new LFUCache(1000,0);
-//		
-//		ResNode resNode1 = new ResNode(res1);
-//		ResNode resNode2 = new ResNode(res2);
-//		ResNode resNode3 = new ResNode(res3);
-//
-//		resNode1.addCount();
-//		resNode1.addCount();
-//		
-//		lfu.pqueue.add(resNode1);
-//		lfu.pqueue.add(resNode2);
-//		lfu.pqueue.add(resNode3);
-//		
-//		lfu.pqueue.remove(resNode2);
-//		resNode2.addCount();
-//		lfu.pqueue.add(resNode2);
-//		
-//		System.out.println(lfu.pqueue.poll().res);
-//		System.out.println(lfu.pqueue.poll().res);
-//		System.out.println(lfu.pqueue.poll().res);
-//	}
-	
 	
 	public LFUCache(int sizeMax, int x) {
 		super(x);
