@@ -77,12 +77,11 @@ public class RLFCache extends BytehitrateWarmingCache{
 		
 		@Override 
 		public boolean equals(Object other) {
-		    boolean result = false;
 		    if (other instanceof ResNode) {
 		        ResNode that = (ResNode) other;
-		        result = that.res.url == this.res.url;
+		        return this.res.url.equals(that.res.url);
 		    }
-		    return result;
+		    return false;
 		}
 		
 //		poll -> remove the least frequency element
