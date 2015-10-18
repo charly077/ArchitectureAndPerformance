@@ -7,7 +7,6 @@ import java.util.PriorityQueue;
 import archandperfs1.BytehitrateWarmingCache;
 import archandperfs1.Request;
 import archandperfs1.Resource;
-import archandperfs1.task1.LFUCache.ResNode;
 
 //TODO Test if when we modify a node, it modify the priorityQueue
 
@@ -33,7 +32,6 @@ public class LFUCache extends BytehitrateWarmingCache{
 				hit(req);
 				pqueue.remove(resNode);
 				resNode.addCount(); // add 1 to the frequency count
-				resNode.stamp();
 				pqueue.add(resNode);
 				return res;
 			}
@@ -43,9 +41,7 @@ public class LFUCache extends BytehitrateWarmingCache{
 				res = miss(req);
 				size += res.size;
 				pqueue.remove(resNode);
-				resNode.count = 0; // reset the count
-				resNode.res = res; // modify the content
-				resNode.stamp();
+				resNode.resetResource(res);
 				pqueue.add(resNode);
 				return res;
 			}
@@ -64,7 +60,6 @@ public class LFUCache extends BytehitrateWarmingCache{
 		Resource res = miss(req);
 		resNode = new ResNode(res);
 		mapping.put(resNode.res.url, resNode);
-		resNode.stamp();
 		pqueue.add(resNode);
 		size += res.size;
 		return res;
@@ -80,11 +75,18 @@ public class LFUCache extends BytehitrateWarmingCache{
 			this.timestamp = System.nanoTime();
 		}
 		
-		public void addCount(){
-			count++;
+		public void resetResource(Resource res) {
+			this.res = res;
+			this.count = 0;
+			stamp();
 		}
 		
-		public void stamp() {
+		public void addCount(){
+			count++;
+			stamp();
+		}
+		
+		private void stamp() {
 			this.timestamp = System.nanoTime();
 		}
 		

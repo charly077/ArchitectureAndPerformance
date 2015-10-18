@@ -29,7 +29,6 @@ public class LFUCache extends BytehitrateWarmingCache {
 				hit(req);
 				pqueue.remove(rnode);
 				rnode.addCount();
-				rnode.stamp();
 				pqueue.add(rnode);
 				return res;
 			}
@@ -37,9 +36,7 @@ public class LFUCache extends BytehitrateWarmingCache {
 //				Not the same size => miss, replace and return
 				res = miss(req);
 				pqueue.remove(rnode);
-				rnode.res = res;
-				rnode.count = 0;
-				rnode.stamp();
+				rnode.resetResource(res);
 				pqueue.add(rnode);
 				return res;
 			}
@@ -55,13 +52,10 @@ public class LFUCache extends BytehitrateWarmingCache {
 		Resource res = miss(req);
 		rnode = new ResNode(res);
 		mapping.put(req.url, rnode);
-		rnode.stamp();
-		pqueue.add(rnode);
 		
 		return res;
 	}
 
-	
 	public static class ResNode implements Comparable<ResNode>{
 		private int count = 0; // used by the priority queue!
 		private long timestamp;
@@ -72,11 +66,18 @@ public class LFUCache extends BytehitrateWarmingCache {
 			this.timestamp = System.nanoTime();
 		}
 		
-		public void addCount(){
-			count++;
+		public void resetResource(Resource res) {
+			this.res = res;
+			this.count = 0;
+			stamp();
 		}
 		
-		public void stamp() {
+		public void addCount(){
+			count++;
+			stamp();
+		}
+		
+		private void stamp() {
 			this.timestamp = System.nanoTime();
 		}
 		
