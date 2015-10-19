@@ -42,7 +42,6 @@ public class LFUCache extends BytehitrateWarmingCache {
 			}
 		}
 		
-//		Add an element
 		if(pqueue.size() == n) {
 //			Full => find the less used and remove it
 			ResNode removed = pqueue.poll();
@@ -51,6 +50,7 @@ public class LFUCache extends BytehitrateWarmingCache {
 		
 		Resource res = miss(req);
 		rnode = new ResNode(res);
+		pqueue.add(rnode);
 		mapping.put(req.url, rnode);
 		
 		return res;
