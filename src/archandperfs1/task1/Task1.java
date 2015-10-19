@@ -1,8 +1,6 @@
 package archandperfs1.task1;
 
 import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -23,7 +21,6 @@ public class Task1 {
 		BytehitrateWarmingCache lfu = new LFUCache(n, x);
 		BytehitrateWarmingCache lru = new LRUCache(n, x);
 		
-		StringBuilder b = new StringBuilder("");
 		Scanner in = new Scanner(System.in);
 		
 		double reqs = 0;
@@ -34,11 +31,9 @@ public class Task1 {
 			Request req = new Request(in.next(), in.nextInt());
 			lfu.process(req);
 			lfudata.add(reqs, lfu.hitRate());
-			b.append(String.format("%.2f", lfu.hitRate())).append(' ');
 			
 			lru.process(req);
 			lrudata.add(reqs, lru.hitRate());
-			b.append(String.format("%.2f", lru.hitRate())).append(';');
 			reqs++;
 		}
 		in.close();
@@ -51,6 +46,7 @@ public class Task1 {
 		dataset.addSeries(lrudata);
 		
 		JFrame f = new ChartFrame("", ChartFactory.createXYLineChart("", "", "", dataset));
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setPreferredSize(new Dimension(640, 480));
 		f.pack();
 		f.setVisible(true);
@@ -60,10 +56,5 @@ public class Task1 {
 //		pr = new PrintWriter("cache_lru.txt");
 //		pr.write(lru.dump());
 //		pr.close();
-	}
-	
-	public static void toClipboard(String s) {
-		StringSelection sel = new StringSelection(s);
-		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, sel);
 	}
 }
