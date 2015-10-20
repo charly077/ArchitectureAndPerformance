@@ -45,7 +45,7 @@ public class PlotHitrateOnSize {
 		dataset.addSeries(lfudata);
 		dataset.addSeries(lrudata);
 		
-		ChartUtilities.saveChartAsPNG(new File("hitratio.png"), ChartFactory.createXYLineChart("", "Number of requests", "Hit ratio", dataset), 1280, 720);
+		ChartUtilities.saveChartAsPNG(new File("hitratio.png"), ChartFactory.createXYLineChart("", "Cache size (slots)", "Hitrate", dataset), 1280, 720);
 		
 //		JFrame f = new ChartFrame("", ChartFactory.createXYLineChart("", "Size of cache (slots)", "Hitrate", dataset));
 //		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
