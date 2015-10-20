@@ -12,9 +12,9 @@ import archandperfs1.Resource;
 public class LRUCache extends BytehitrateWarmingCache {
 	private final HashMap<String, Node> mapping = new HashMap<>();
 	private Node head, tail;
-	private double sizeMax;
+	private long sizeMax;
 	
-	private double size;
+	private long size;
 	
 	
 	public LRUCache(int size, int x) {
@@ -37,11 +37,9 @@ public class LRUCache extends BytehitrateWarmingCache {
 				return res;
 			}
 //			Not the same size => miss, toHead and return
-			size -= res.size;
-			res = miss(req);
-			size += res.size;
-			node.res = res;
 			removeNode(node);
+			res = miss(req);
+			node.res = res;
 			toHead(node);
 			return res;
 		}
@@ -83,6 +81,7 @@ public class LRUCache extends BytehitrateWarmingCache {
 		}
 		else
 			after.pre = previous;
+		
 //		add the size to the one of what is already full 
 		size -= n.res.size; 
 	}
@@ -99,6 +98,7 @@ public class LRUCache extends BytehitrateWarmingCache {
 			head.pre = n;
 		
 		head = n;
+		
 //		In order to keep the size correct
 		size += n.res.size;
 	}
@@ -119,7 +119,7 @@ public class LRUCache extends BytehitrateWarmingCache {
 		StringBuilder b = new StringBuilder();
 		while (n!=null){
 			b.append(n.res.url).append('\n');
-			n=n.next;
+			n = n.next;
 		}
 		return b.toString();
 	}

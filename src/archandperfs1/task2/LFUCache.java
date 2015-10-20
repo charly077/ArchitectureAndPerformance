@@ -120,7 +120,7 @@ public class LFUCache extends BytehitrateWarmingCache{
 		Iterator<ResNode> iter = pqueue.iterator();
 		StringBuilder b = new StringBuilder();
 		while(iter.hasNext()) {
-			b.append(iter.next().res.toString()).append('\n');
+			b.append(iter.next().res.url).append('\n');
 		}
 		return b.toString();
 	}
