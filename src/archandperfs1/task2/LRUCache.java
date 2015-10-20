@@ -7,15 +7,14 @@ import archandperfs1.Request;
 import archandperfs1.Resource;
 
 /**
- * A LRU cache implemented with an array of resources, and a hashmap in order to retrieve
- * the position in the array.
+ * A LRU cache implemented with a linked list of Resources, using a HashMap for lookup.
  */
 public class LRUCache extends BytehitrateWarmingCache {
 	private final HashMap<String, Node> mapping = new HashMap<>();
 	private Node head, tail;
-	private double sizeMax;
+	private long sizeMax;
 	
-	private double size;
+	private long size;
 	
 	
 	public LRUCache(int size, int x) {
@@ -38,11 +37,9 @@ public class LRUCache extends BytehitrateWarmingCache {
 				return res;
 			}
 //			Not the same size => miss, toHead and return
-			size -= res.size;
-			res = miss(req);
-			size += res.size;
-			node.res = res;
 			removeNode(node);
+			res = miss(req);
+			node.res = res;
 			toHead(node);
 			return res;
 		}
@@ -84,6 +81,7 @@ public class LRUCache extends BytehitrateWarmingCache {
 		}
 		else
 			after.pre = previous;
+		
 //		add the size to the one of what is already full 
 		size -= n.res.size; 
 	}
@@ -100,6 +98,7 @@ public class LRUCache extends BytehitrateWarmingCache {
 			head.pre = n;
 		
 		head = n;
+		
 //		In order to keep the size correct
 		size += n.res.size;
 	}
@@ -121,6 +120,7 @@ public class LRUCache extends BytehitrateWarmingCache {
 		while (n!=null){
 			b.append(n.res.url).append(" ").append(n.res.size).append('\n');
 			n=n.next;
+
 		}
 		return b.toString();
 	}
