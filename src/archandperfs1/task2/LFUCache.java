@@ -8,11 +8,13 @@ import archandperfs1.BytehitrateWarmingCache;
 import archandperfs1.Request;
 import archandperfs1.Resource;
 
-//TODO Test if when we modify a node, it modify the priorityQueue
-
+/**
+ * Least Frequently Used strategy, using a PriorityQueue to remove LFU the cached files,
+ * and a HashMap for a faster lookup.
+ */
 public class LFUCache extends BytehitrateWarmingCache{
 	private HashMap<String, ResNode> mapping = new HashMap<>(); // to be able of modifying a node
-	private  PriorityQueue<ResNode> pqueue = new PriorityQueue<ResNode>();
+	private PriorityQueue<ResNode> pqueue = new PriorityQueue<ResNode>();
 	
 	private int sizeMax, size = 0;
 	

@@ -8,6 +8,9 @@ import archandperfs1.BytehitrateWarmingCache;
 import archandperfs1.Request;
 import archandperfs1.Resource;
 
+/**
+ * Least Frequently Used strategy implementation
+ */
 public class LFUCache extends BytehitrateWarmingCache {
 	private HashMap<String, ResNode> mapping = new HashMap<>();
 	private final PriorityQueue<ResNode> pqueue = new PriorityQueue<>();
@@ -90,7 +93,7 @@ public class LFUCache extends BytehitrateWarmingCache {
 		    return false;
 		}
 		
-//		poll -> remove the least frequency element
+//		poll -> remove the least frequency element, with the lowest timestamp
 		@Override
 		public int compareTo(ResNode other) {
 		    final int BEFORE = -1;

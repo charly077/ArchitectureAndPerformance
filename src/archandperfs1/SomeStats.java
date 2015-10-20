@@ -3,6 +3,9 @@ package archandperfs1;
 import java.util.HashMap;
 import java.util.Scanner;
 
+/**
+ * Computes some statistics about the trace (relies on stdin)
+ */
 public class SomeStats {
 	public static void main(String[] args) {
 		long sizes = 0;

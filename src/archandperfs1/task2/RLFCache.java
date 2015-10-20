@@ -10,7 +10,6 @@ import archandperfs1.Resource;
 
 /**
  * Remove large first cache strategy
- *
  */
 public class RLFCache extends BytehitrateWarmingCache{
 	private HashMap<String, ResNode> mapping = new HashMap<>(); // to be able of modifying a node

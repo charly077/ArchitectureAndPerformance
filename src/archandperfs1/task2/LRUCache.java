@@ -7,8 +7,7 @@ import archandperfs1.Request;
 import archandperfs1.Resource;
 
 /**
- * A LRU cache implemented with an array of resources, and a hashmap in order to retrieve
- * the position in the array.
+ * A LRU cache implemented with a linked list of Resources, using a HashMap for lookup.
  */
 public class LRUCache extends BytehitrateWarmingCache {
 	private final HashMap<String, Node> mapping = new HashMap<>();
