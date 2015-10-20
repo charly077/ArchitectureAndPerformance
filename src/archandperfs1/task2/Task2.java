@@ -23,6 +23,13 @@ public class Task2 {
 			rlf.process(res);
 		}
 		in.close();
+
+		System.out.println(String.format("LRU Hit rate: %.2f", lru.hitRate()*100));
+		System.out.println(String.format("LRU Byte hit rate: %.2f", lru.byteHitRate()*100));
+		System.out.println(String.format("LFU Hit rate: %.2f", lfu.hitRate()*100));
+		System.out.println(String.format("LFU Byte hit rate: %.2f", lfu.byteHitRate()*100));
+		System.out.println(String.format("RLF Hit rate: %.2f", rlf.hitRate()*100));
+		System.out.println(String.format("RLF Byte hit rate: %.2f", rlf.byteHitRate()*100));
 		
 		PrintWriter pr = new PrintWriter("cache_lfu.txt");
 		pr.write(lfu.dump());
@@ -30,7 +37,7 @@ public class Task2 {
 		pr = new PrintWriter("cache_lru.txt");
 		pr.write(lru.dump());
 		pr.close();
-		pr = new PrintWriter("cache_rlf.txt");
+		pr = new PrintWriter("cache_size-based.txt");
 		pr.write(rlf.dump());
 		pr.close();
 	}
