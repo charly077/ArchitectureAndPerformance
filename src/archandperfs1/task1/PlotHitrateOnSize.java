@@ -1,14 +1,12 @@
 package archandperfs1.task1;
 
-import java.awt.Dimension;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.JFrame;
-
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -28,7 +26,7 @@ public class PlotHitrateOnSize {
 		XYSeries lrudata = new XYSeries("LRU");
 		
 		BytehitrateWarmingCache lfu, lru;
-		int step = 100;
+		int step = 10;
 		for(int i = 1; i <= 3001; i += step) {
 			lfu = new LFUCache(i, 20000);
 			lru = new LRUCache(i, 20000);
@@ -47,20 +45,13 @@ public class PlotHitrateOnSize {
 		dataset.addSeries(lfudata);
 		dataset.addSeries(lrudata);
 		
-//		ChartUtilities.saveChartAsPNG(new File("hitratio.png"), ChartFactory.createXYLineChart("", "Number of requests", "Hit ratio", dataset), 1280, 720);
+		ChartUtilities.saveChartAsPNG(new File("hitratio.png"), ChartFactory.createXYLineChart("", "Number of requests", "Hit ratio", dataset), 1280, 720);
 		
-		JFrame f = new ChartFrame("", ChartFactory.createXYLineChart("", "Size of cache (slots)", "Hitrate", dataset));
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setPreferredSize(new Dimension(640, 480));
-		f.pack();
-		f.setVisible(true);
-		
-//		PrintWriter pr = new PrintWriter("cache_lfu.txt");
-//		pr.write(lfu.dump());
-//		pr.close();
-//		pr = new PrintWriter("cache_lru.txt");
-//		pr.write(lru.dump());
-//		pr.close();
+//		JFrame f = new ChartFrame("", ChartFactory.createXYLineChart("", "Size of cache (slots)", "Hitrate", dataset));
+//		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		f.setPreferredSize(new Dimension(640, 480));
+//		f.pack();
+//		f.setVisible(true);
 	}
 
 }

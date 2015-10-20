@@ -1,6 +1,7 @@
 package archandperfs1.task1;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 import archandperfs1.BytehitrateWarmingCache;
@@ -24,5 +25,12 @@ public class Task1 {
 		
 		System.out.println(String.format("LRU hitrate: %.2f", lru.hitRate()*100));
 		System.out.println(String.format("LFU hitrate: %.2f", lfu.hitRate()*100));
+		
+		PrintWriter pr = new PrintWriter("cache_lfu.txt");
+		pr.write(lfu.dump());
+		pr.close();
+		pr = new PrintWriter("cache_lru.txt");
+		pr.write(lru.dump());
+		pr.close();
 	}
 }
