@@ -26,7 +26,7 @@ public class PlotHitrateOnSize {
 		XYSeries lrudata = new XYSeries("LRU");
 		
 		BytehitrateWarmingCache lfu, lru;
-		int step = 10;
+		int step = 50;
 		for(int i = 1; i <= 3001; i += step) {
 			lfu = new LFUCache(i, 20000);
 			lru = new LRUCache(i, 20000);

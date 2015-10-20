@@ -33,7 +33,7 @@ public class PlotHitrateOnSize {
 
 		BytehitrateWarmingCache lfu, lru, rlf;
 		
-		int step = 10*21152;
+		int step = 50*21152;
 		for(int i = 1; i <= 64*1024*1024; i += step) {
 			
 			lfu = new LFUCache(i, 20000);
