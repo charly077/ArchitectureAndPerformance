@@ -119,7 +119,7 @@ public class LRUCache extends BytehitrateWarmingCache {
 		
 		StringBuilder b = new StringBuilder();
 		while (n!=null){
-			b.append(n.res.url).append('\n');
+			b.append(n.res.url).append(" ").append(n.res.size).append('\n');
 			n=n.next;
 		}
 		return b.toString();

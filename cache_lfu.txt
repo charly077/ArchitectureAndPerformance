@@ -1,10 +1,10 @@
 /icons/unknown.xbm 515
 /images/kscmap-small.gif 39017
+/images/ksclogo-medium.gif 5866
 /images/launch-logo.gif 1713
 /htbin/cdt_main.pl 3873
 /images/USA-logosmall.gif 234
 /images/KSC-logosmall.gif 1204
 /images/NASA-logosmall.gif 786
-/images/WORLD-logosmall.gif 669
-/shuttle/countdown/ 4745
 /images/MOSAIC-logosmall.gif 363
+/images/WORLD-logosmall.gif 669
