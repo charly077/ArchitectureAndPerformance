@@ -30,8 +30,8 @@ public class PlotHitrateOnSize {
 		BytehitrateWarmingCache lfu, lru;
 		int step = 100;
 		for(int i = 1; i <= 3001; i += step) {
-			lfu = new LFUCache(i, 4500);
-			lru = new LRUCache(i, 4500);
+			lfu = new LFUCache(i, 20000);
+			lru = new LRUCache(i, 20000);
 			
 			for(int j = 0; j < req.size(); j++) {
 				lfu.process(req.get(j));
@@ -49,7 +49,7 @@ public class PlotHitrateOnSize {
 		
 //		ChartUtilities.saveChartAsPNG(new File("hitratio.png"), ChartFactory.createXYLineChart("", "Number of requests", "Hit ratio", dataset), 1280, 720);
 		
-		JFrame f = new ChartFrame("", ChartFactory.createXYLineChart("", "Size of cache", "Hit ratio", dataset));
+		JFrame f = new ChartFrame("", ChartFactory.createXYLineChart("", "Size of cache (slots)", "Hitrate", dataset));
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setPreferredSize(new Dimension(640, 480));
 		f.pack();
